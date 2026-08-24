@@ -1,0 +1,81 @@
+{
+  "manifest_version": 3,
+  "name": "CodeHub",
+  "version": "1.0.0",
+  "description": "Automatically sync accepted competitive programming submissions to GitHub",
+  "icons": {
+    "16": "icons/icon16.svg",
+    "48": "icons/icon48.svg",
+    "128": "icons/icon128.svg"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "CodeHub - Submission Syncer"
+  },
+  "options_page": "options.html",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "notifications",
+    "alarms",
+    "webNavigation"
+  ],
+  "host_permissions": [
+    "https://codeforces.com/*",
+    "https://leetcode.com/*",
+    "https://atcoder.jp/*",
+    "https://api.github.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://codeforces.com/contest/*/submission/*",
+        "https://codeforces.com/problemset/submission/*/*",
+        "https://codeforces.com/gym/*/submission/*",
+        "https://codeforces.com/group/*/contest/*/submission/*"
+      ],
+      "js": ["content-codeforces.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://atcoder.jp/contests/*/submissions/*"
+      ],
+      "js": ["content-atcoder.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://leetcode.com/problems/*"
+      ],
+      "js": ["content-leetcode-bridge.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://leetcode.com/problems/*"
+      ],
+      "js": ["content-leetcode.js"],
+      "world": "MAIN",
+      "run_at": "document_start"
+    }
+  ],
+  "commands": {
+    "manual-sync": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S",
+        "mac": "Command+Shift+S"
+      },
+      "description": "Manually trigger sync from current page"
+    }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/*.svg"],
+      "matches": ["https://codeforces.com/*", "https://leetcode.com/*", "https://atcoder.jp/*"]
+    }
+  ]
+}

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeHub Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>CodeHub Settings</h1>
+      <p class="subtitle">Configure GitHub integration and sync preferences</p>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>GitHub Configuration</h2>
+        <p class="card-description">Required for syncing submissions to GitHub</p>
+
+        <div class="form-group">
+          <label for="githubToken">Personal Access Token (PAT)</label>
+          <div class="input-wrapper">
+            <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off">
+            <button type="button" class="btn-toggle" id="toggleToken" aria-label="Show/hide token">
+              <svg class="icon-eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              <svg class="icon-eye-off hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                <line x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
+            </button>
+          </div>
+          <p class="help-text">Create a token at <a href="https://github.com/settings/tokens" target="_blank">GitHub Settings → Tokens</a> with <code>repo</code> scope</p>
+          <div class="validation-message" id="tokenValidation"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="githubRepo">Repository</label>
+          <div class="input-wrapper">
+            <input type="text" id="githubRepo" placeholder="username/repo-name" autocomplete="off">
+          </div>
+          <p class="help-text">Format: <code>owner/repo</code> (e.g., <code>octocat/Hello-World</code>)</p>
+          <div class="validation-message" id="repoValidation"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="githubBranch">Branch</label>
+          <input type="text" id="githubBranch" value="main" placeholder="main">
+          <p class="help-text">Target branch for commits (default: main)</p>
+        </div>
+
+        <div class="form-group">
+          <label for="basePath">Base Path</label>
+          <input type="text" id="basePath" value="solutions" placeholder="solutions">
+          <p class="help-text">Folder path in repository (default: solutions)</p>
+        </div>
+
+        <button class="btn btn-primary" id="testConnection">Test Connection</button>
+        <div class="validation-message" id="connectionResult"></div>
+      </section>
+
+      <section class="card">
+        <h2>Sync Preferences</h2>
+
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="autoSync">
+            <span class="checkmark"></span>
+            <span>Auto-sync on accepted submission</span>
+          </label>
+          <p class="help-text">Automatically push to GitHub when a submission is accepted</p>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="createReadme">
+            <span class="checkmark"></span>
+            <span>Generate README.md per problem</span>
+          </label>
+          <p class="help-text">Create a README with problem description, solution, and complexity</p>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="includeFailed">
+            <span class="checkmark"></span>
+            <span>Include failed submissions</span>
+          </label>
+          <p class="help-text">Also sync submissions that didn't pass (for reference)</p>
+        </div>
+
+        <div class="form-group">
+          <label for="syncInterval">Sync Interval (minutes)</label>
+          <input type="number" id="syncInterval" value="5" min="1" max="60">
+          <p class="help-text">How often to check for pending submissions (1-60 minutes)</p>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Platform Settings</h2>
+        <p class="card-description">Enable/disable platforms for submission detection</p>
+
+        <div class="platform-grid">
+          <label class="platform-card" data-platform="codeforces">
+            <div class="platform-icon cf">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+              </svg>
+            </div>
+            <span class="platform-name">Codeforces</span>
+            <input type="checkbox" id="enableCodeforces" checked>
+            <span class="checkmark"></span>
+          </label>
+
+          <label class="platform-card" data-platform="leetcode">
+            <div class="platform-icon lc">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+            <span class="platform-name">LeetCode</span>
+            <input type="checkbox" id="enableLeetcode" checked>
+            <span class="checkmark"></span>
+          </label>
+
+          <label class="platform-card" data-platform="atcoder">
+            <div class="platform-icon ac">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+            <span class="platform-name">AtCoder</span>
+            <input type="checkbox" id="enableAtcoder" checked>
+            <span class="checkmark"></span>
+          </label>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Advanced</h2>
+
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="debugMode">
+            <span class="checkmark"></span>
+            <span>Debug mode</span>
+          </label>
+          <p class="help-text">Enable verbose logging in console</p>
+        </div>
+
+        <div class="form-group">
+          <label>Data Management</label>
+          <div class="btn-group">
+            <button class="btn btn-secondary" id="exportData">Export Data</button>
+            <button class="btn btn-secondary" id="importData">Import Data</button>
+            <button class="btn btn-danger" id="clearData">Clear All Data</button>
+          </div>
+          <input type="file" id="importFile" accept=".json" style="display: none;">
+        </div>
+      </section>
+
+      <div class="save-bar">
+        <button class="btn btn-primary" id="saveBtn">Save Settings</button>
+        <span class="save-status" id="saveStatus"></span>
+      </div>
+    </main>
+
+    <footer>
+      <p>CodeHub v1.0.0 - Sync your competitive programming solutions to GitHub</p>
+    </footer>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
